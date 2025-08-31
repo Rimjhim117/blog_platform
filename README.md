@@ -12,7 +12,8 @@ Features
     RESTful API: A robust and scalable backend API to handle all data and business logic.
 
 Technologies Used
-Backend
+
+Backend:
 
     Node.js & Express: For building the RESTful API.
 
@@ -22,7 +23,7 @@ Backend
 
     jsonwebtoken: For creating and verifying secure access tokens.
 
-Frontend
+Frontend:
 
     React: For building a dynamic and component-based user interface.
 
