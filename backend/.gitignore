@@ -1,0 +1,13 @@
+# General
+node_modules/
+.env
+.DS_Store
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS-specific
+.idea/
+.vscode/
