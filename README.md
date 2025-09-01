@@ -57,7 +57,7 @@ To run this project locally, follow these steps.
 
     Run the client: npm run dev
 
-The application will be available at http://localhost:5173.
+
 Author
 
     Rimjhim Srivastava
