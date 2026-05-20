@@ -1,17 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaPen, FaTag, FaSave, FaTimes, FaHeart, FaLightbulb, FaFeather, FaComments, FaBullseye } from 'react-icons/fa';
+
+const PRESET_IMAGES = [
+  { name: 'Abstract Pastel', url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80' },
+  { name: 'Glassmorphic Aurora', url: 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=800&q=80' },
+  { name: 'Gradient Mesh', url: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=800&q=80' },
+  { name: 'Abstract Fluid', url: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&w=800&q=80' }
+];
 
 const CreatePost = () => {
   const [formData, setFormData] = useState({
     title: '',
     content: '',
-    tags: ''
+    tags: '',
+    coverImage: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [hasDraft, setHasDraft] = useState(false);
   const navigate = useNavigate();
+
+  // Load draft on mount
+  useEffect(() => {
+    const savedDraft = localStorage.getItem('blog_draft');
+    if (savedDraft) {
+      try {
+        const parsed = JSON.parse(savedDraft);
+        if (parsed.title?.trim() || parsed.content?.trim() || parsed.tags?.trim() || parsed.coverImage) {
+          setHasDraft(true);
+        }
+      } catch (err) {
+        console.error('Error parsing draft:', err);
+      }
+    }
+  }, []);
+
+  // Save draft on changes
+  useEffect(() => {
+    if (formData.title || formData.content || formData.tags || formData.coverImage) {
+      localStorage.setItem('blog_draft', JSON.stringify(formData));
+    }
+  }, [formData]);
+
+  const handleRestoreDraft = () => {
+    const savedDraft = localStorage.getItem('blog_draft');
+    if (savedDraft) {
+      try {
+        setFormData(JSON.parse(savedDraft));
+      } catch (err) {
+        console.error('Error restoring draft:', err);
+      }
+    }
+    setHasDraft(false);
+  };
+
+  const handleDiscardDraft = () => {
+    localStorage.removeItem('blog_draft');
+    setHasDraft(false);
+    setFormData({ title: '', content: '', tags: '', coverImage: '' });
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -35,10 +84,12 @@ const CreatePost = () => {
       const postData = {
         title: formData.title.trim(),
         content: formData.content.trim(),
-        tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag)
+        tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+        coverImage: formData.coverImage
       };
 
       const response = await axios.post('/posts', postData);
+      localStorage.removeItem('blog_draft');
       navigate(`/blog/${response.data._id || response.data.id}`);
     } catch (error) {
       setError(error.response?.data?.message || 'Failed to create post. Please try again.');
@@ -79,6 +130,36 @@ const CreatePost = () => {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="bg-white/70 backdrop-blur-md rounded-[2.5rem] shadow-xl p-8 sm:p-10 border border-white/80">
+            {hasDraft && (
+              <div className="mb-8 p-5 bg-gradient-to-r from-pink-50/90 via-purple-50/90 to-blue-50/90 backdrop-blur-md border border-pink-100 rounded-3xl shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-start">
+                  <div className="bg-pink-100 p-2.5 rounded-xl mr-4 flex-shrink-0 text-pink-600 flex items-center justify-center">
+                    <FaSave />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-900 text-sm">Unsaved draft found</h4>
+                    <p className="text-gray-600 text-xs mt-1">You have a draft saved from your last session. Would you like to restore it?</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <button
+                    type="button"
+                    onClick={handleRestoreDraft}
+                    className="bg-gradient-to-r from-pink-500 to-purple-600 text-white text-xs px-4 py-2.5 rounded-full font-semibold shadow-sm hover:opacity-90 transition duration-300"
+                  >
+                    Restore
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleDiscardDraft}
+                    className="bg-white hover:bg-gray-50 text-gray-700 text-xs px-4 py-2.5 border border-gray-200 rounded-full font-semibold transition duration-300"
+                  >
+                    Discard
+                  </button>
+                </div>
+              </div>
+            )}
+
             {error && (
               <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl flex items-center">
                 <FaTimes className="mr-2 flex-shrink-0" />
@@ -123,6 +204,42 @@ const CreatePost = () => {
               <p className="text-sm text-gray-500 mt-2">
                 Add tags to help readers discover your story
               </p>
+            </div>
+
+            {/* Cover Image */}
+            <div className="mb-8">
+              <label className="block text-lg font-semibold text-gray-700 mb-3">
+                Cover Image
+              </label>
+              
+              {/* Presets Grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+                {PRESET_IMAGES.map((img, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, coverImage: img.url }))}
+                    className={`relative aspect-video rounded-2xl overflow-hidden border-2 transition duration-300 ${
+                      formData.coverImage === img.url ? 'border-pink-500 shadow-md scale-[1.02]' : 'border-transparent hover:border-gray-300'
+                    }`}
+                  >
+                    <img src={img.url} alt={img.name} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-3">
+                      <span className="text-[10px] font-bold text-white tracking-wider uppercase">{img.name}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              {/* Custom Input */}
+              <input
+                type="text"
+                name="coverImage"
+                value={formData.coverImage || ''}
+                onChange={handleChange}
+                placeholder="Or paste a custom image URL (e.g. Unsplash link)"
+                className="w-full px-6 py-4 border border-pink-100 rounded-2xl bg-white/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 transition duration-300 shadow-inner text-gray-800"
+              />
             </div>
 
             {/* Content */}

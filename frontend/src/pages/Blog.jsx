@@ -8,9 +8,11 @@ import { useAuth } from '../contexts/AuthContext';
 
 const Blog = () => {
   const [posts, setPosts] = useState([]);
+  const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedTag, setSelectedTag] = useState('All');
   const [sortBy, setSortBy] = useState('createdAt');
   const [sortOrder, setSortOrder] = useState('desc');
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,7 +24,20 @@ const Blog = () => {
 
   useEffect(() => {
     fetchPosts();
-  }, [currentPage, sortBy, sortOrder, searchTerm]);
+  }, [currentPage, sortBy, sortOrder, searchTerm, selectedTag]);
+
+  useEffect(() => {
+    fetchTags();
+  }, []);
+
+  const fetchTags = async () => {
+    try {
+      const response = await axios.get('/posts/tags');
+      setTags(response.data || []);
+    } catch (err) {
+      console.error('Error fetching tags:', err);
+    }
+  };
 
   const fetchPosts = async () => {
     try {
@@ -32,7 +47,8 @@ const Blog = () => {
         limit: postsPerPage,
         sort: sortBy,
         order: sortOrder,
-        ...(searchTerm && { search: searchTerm })
+        ...(searchTerm && { search: searchTerm }),
+        ...(selectedTag && selectedTag !== 'All' && { tag: selectedTag.toLowerCase() })
       });
 
       const response = await axios.get(`/posts?${params}`);
@@ -124,22 +140,45 @@ const Blog = () => {
         {/* Search and Filter Bar */}
         <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-gray-100 p-6 mb-12">
           <div className="flex flex-col lg:flex-row gap-6">
-            {/* Search */}
-            <form onSubmit={handleSearch} className="flex-1">
-              <div className="relative group">
-                <input
-                  type="text"
-                  placeholder="Search for inspiration..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 bg-gray-50/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all duration-300 outline-none text-gray-700"
-                />
-                <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-pink-500 transition-colors duration-300" />
+            {/* Search and Tags */}
+            <div className="flex-1">
+              <form onSubmit={handleSearch} className="mb-4">
+                <div className="relative group">
+                  <input
+                    type="text"
+                    placeholder="Search for inspiration..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-12 pr-4 py-4 bg-gray-50/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all duration-300 outline-none text-gray-700"
+                  />
+                  <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-pink-500 transition-colors duration-300" />
+                </div>
+              </form>
+
+              {/* Tag Pills */}
+              <div className="flex flex-wrap gap-2">
+                {['All', ...(tags.length > 0 ? tags : ['Technology', 'Lifestyle', 'Travel', 'Design', 'Creative'])].map((tag) => (
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() => {
+                      setSelectedTag(tag);
+                      setCurrentPage(1);
+                    }}
+                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 border uppercase tracking-wider ${
+                      selectedTag === tag
+                        ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white border-transparent shadow-sm'
+                        : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    {tag.charAt(0).toUpperCase() + tag.slice(1)}
+                  </button>
+                ))}
               </div>
-            </form>
+            </div>
 
             {/* Sort Options */}
-            <div className="flex items-center space-x-4 bg-gray-50/50 px-6 py-2 rounded-xl border border-gray-200">
+            <div className="flex items-center space-x-4 bg-gray-50/50 px-6 py-2 rounded-xl border border-gray-200 self-start lg:self-auto">
               <div className="flex items-center">
                 <FaFilter className="text-gray-400 mr-2" />
                 <span className="text-sm font-semibold text-gray-600 mr-4">Sort by:</span>

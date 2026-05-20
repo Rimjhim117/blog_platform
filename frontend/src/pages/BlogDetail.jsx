@@ -4,32 +4,71 @@ import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 import CommentSection from '../components/CommentSection';
-import { FaUser, FaCalendar, FaClock, FaEdit, FaTrash, FaArrowLeft, FaHeart } from 'react-icons/fa';
+import { FaUser, FaCalendar, FaClock, FaEdit, FaTrash, FaArrowLeft, FaHeart, FaRegHeart, FaBookmark, FaRegBookmark } from 'react-icons/fa';
 
 const BlogDetail = () => {
   const { id } = useParams();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [likes, setLikes] = useState([]);
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
   useEffect(() => {
     fetchPost();
   }, [id]);
+
+  useEffect(() => {
+    if (user && post) {
+      setIsBookmarked(user.bookmarks?.includes(post._id) || false);
+    } else {
+      setIsBookmarked(false);
+    }
+  }, [user, post]);
 
   const fetchPost = async () => {
     try {
       setLoading(true);
       const response = await axios.get(`/posts/${id}`);
       setPost(response.data);
+      setLikes(response.data.likes || []);
     } catch (error) {
       setError('Failed to fetch post');
       console.error('Error fetching post:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleLike = async () => {
+    if (!isAuthenticated) {
+      alert("Please log in to like posts.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(`/posts/${post._id}/like`);
+      setLikes(response.data.likes);
+    } catch (err) {
+      console.error("Error liking post:", err);
+    }
+  };
+
+  const handleBookmark = async () => {
+    if (!isAuthenticated) {
+      alert("Please log in to bookmark posts.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(`/posts/${post._id}/bookmark`);
+      setIsBookmarked(response.data.bookmarks.includes(post._id));
+    } catch (err) {
+      console.error("Error bookmarking post:", err);
     }
   };
 
@@ -61,7 +100,7 @@ const BlogDetail = () => {
 
   const getReadingTime = (content) => {
     const wordsPerMinute = 200;
-    const words = content.split(' ').length;
+    const words = content ? content.split(' ').length : 0;
     return Math.max(1, Math.ceil(words / wordsPerMinute));
   };
 
@@ -89,7 +128,8 @@ const BlogDetail = () => {
     );
   }
 
-  const isAuthor = user && post.author && user._id === post.author._id;
+  const isAuthor = user && post.author && (user._id === post.author._id || user.id === post.author._id);
+  const isLiked = likes.includes(user?.id || user?._id);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 pt-24 pb-20 relative overflow-hidden">
@@ -109,14 +149,21 @@ const BlogDetail = () => {
 
         {/* Post Container */}
         <div className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden mb-12 border border-white">
-          {/* Featured Image Placeholder (Gradient Banner) */}
-          <div className="h-72 sm:h-96 bg-gradient-to-br from-pink-500 via-purple-500 to-indigo-600 relative overflow-hidden group">
-            <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500"></div>
+          {/* Featured Image Banner */}
+          <div 
+            className="h-72 sm:h-96 bg-gradient-to-br from-pink-500 via-purple-500 to-indigo-600 relative overflow-hidden group bg-cover bg-center"
+            style={post.coverImage ? { backgroundImage: `url(${post.coverImage})` } : {}}
+          >
+            <div className="absolute inset-0 bg-black/30 transition-colors duration-500"></div>
             {/* Dynamic abstract shapes inside banner */}
-            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-white opacity-10 rounded-full mix-blend-overlay filter blur-2xl animate-blob"></div>
-            <div className="absolute -top-24 -right-24 w-72 h-72 bg-white opacity-10 rounded-full mix-blend-overlay filter blur-2xl animate-blob animation-delay-2000"></div>
+            {!post.coverImage && (
+              <>
+                <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-white opacity-10 rounded-full mix-blend-overlay filter blur-2xl animate-blob"></div>
+                <div className="absolute -top-24 -right-24 w-72 h-72 bg-white opacity-10 rounded-full mix-blend-overlay filter blur-2xl animate-blob animation-delay-2000"></div>
+              </>
+            )}
             
-            <div className="absolute inset-0 flex flex-col justify-end p-8 sm:p-12 z-10 bg-gradient-to-t from-black/60 to-transparent">
+            <div className="absolute inset-0 flex flex-col justify-end p-8 sm:p-12 z-10 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
               {post.tags && post.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-4">
                   {post.tags.map((tag, index) => (
@@ -181,9 +228,39 @@ const BlogDetail = () => {
             </div>
             
             <div className="mt-12 flex items-center justify-between pt-8 border-t border-gray-100">
-              <button className="flex items-center gap-2 px-6 py-3 bg-pink-50 text-pink-600 hover:bg-pink-100 rounded-full transition-colors duration-300 font-semibold group">
-                <FaHeart className="group-hover:scale-110 transition-transform duration-300" /> Like Story
-              </button>
+              <div className="flex items-center space-x-4">
+                <button 
+                  onClick={handleLike} 
+                  className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 font-semibold ${
+                    isLiked 
+                      ? 'bg-pink-100 text-pink-600 hover:bg-pink-200' 
+                      : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  {isLiked ? (
+                    <FaHeart className="text-pink-500 transition-transform duration-300" />
+                  ) : (
+                    <FaRegHeart className="transition-transform duration-300" />
+                  )}
+                  <span>{likes.length} Likes</span>
+                </button>
+                
+                <button 
+                  onClick={handleBookmark} 
+                  className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 font-semibold ${
+                    isBookmarked 
+                      ? 'bg-purple-100 text-purple-600 hover:bg-purple-200' 
+                      : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  {isBookmarked ? (
+                    <FaBookmark className="text-purple-500" />
+                  ) : (
+                    <FaRegBookmark />
+                  )}
+                  <span>{isBookmarked ? 'Bookmarked' : 'Bookmark'}</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -200,9 +277,6 @@ const BlogDetail = () => {
               <p className="text-gray-600 font-light leading-relaxed mb-4">
                 A creative mind sharing stories and ideas on our platform. Member since {formatDate(post.author.createdAt)}.
               </p>
-              <button className="text-sm font-semibold text-gray-900 bg-gray-100 hover:bg-gray-200 px-5 py-2 rounded-full transition-colors duration-300">
-                View Profile
-              </button>
             </div>
           </div>
         )}

@@ -1,11 +1,12 @@
 import Post from "../models/Post.js";
+import User from "../models/User.js";
 
 // @desc    Get all posts
 // @route   GET /api/posts
 // @access  Public
 export const getPosts = async (req, res) => {
   try {
-    const { limit, page, search, sort, order } = req.query;
+    const { limit, page, search, tag, sort, order } = req.query;
     
     let query = {};
     if (search) {
@@ -15,6 +16,10 @@ export const getPosts = async (req, res) => {
           { content: { $regex: search, $options: 'i' } }
         ]
       };
+    }
+
+    if (tag) {
+      query.tags = tag;
     }
 
     let sortObj = {};
@@ -79,12 +84,13 @@ export const getMyPosts = async (req, res) => {
 // @access  Private
 export const createPost = async (req, res) => {
   try {
-    const { title, content, tags } = req.body;
+    const { title, content, tags, coverImage } = req.body;
 
     const newPost = new Post({
       title,
       content,
       tags: tags || [],
+      coverImage: coverImage || '',
       author: req.user._id,
     });
 
@@ -112,6 +118,7 @@ export const updatePost = async (req, res) => {
     post.title = req.body.title || post.title;
     post.content = req.body.content || post.content;
     post.tags = req.body.tags !== undefined ? req.body.tags : post.tags;
+    post.coverImage = req.body.coverImage !== undefined ? req.body.coverImage : post.coverImage;
 
     const updatedPost = await post.save();
     await updatedPost.populate("author", "username email");
@@ -136,6 +143,89 @@ export const deletePost = async (req, res) => {
 
     await post.deleteOne();
     res.json({ message: "Post deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// @desc    Toggle like post
+// @route   POST /api/posts/:id/like
+// @access  Private
+export const toggleLikePost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ message: "Post not found" });
+
+    if (!post.likes) {
+      post.likes = [];
+    }
+
+    const likeIndex = post.likes.indexOf(req.user._id);
+    if (likeIndex === -1) {
+      post.likes.push(req.user._id);
+    } else {
+      post.likes.splice(likeIndex, 1);
+    }
+
+    await post.save();
+    res.json({ likes: post.likes });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// @desc    Toggle bookmark post
+// @route   POST /api/posts/:id/bookmark
+// @access  Private
+export const toggleBookmarkPost = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    if (!user.bookmarks) {
+      user.bookmarks = [];
+    }
+
+    const bookmarkIndex = user.bookmarks.indexOf(req.params.id);
+    if (bookmarkIndex === -1) {
+      user.bookmarks.push(req.params.id);
+    } else {
+      user.bookmarks.splice(bookmarkIndex, 1);
+    }
+
+    await user.save();
+    res.json({ bookmarks: user.bookmarks });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// @desc    Get bookmarked posts
+// @route   GET /api/posts/bookmarked
+// @access  Private
+export const getBookmarkedPosts = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).populate({
+      path: 'bookmarks',
+      populate: { path: 'author', select: 'username email' }
+    });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.json({ posts: user.bookmarks || [] });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// @desc    Get all unique tags
+// @route   GET /api/posts/tags
+// @access  Public
+export const getUniqueTags = async (req, res) => {
+  try {
+    const tags = await Post.distinct("tags");
+    const validTags = tags.filter(tag => tag && tag.trim()).map(tag => tag.trim());
+    const uniqueTags = [...new Set(validTags)];
+    res.json(uniqueTags);
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }

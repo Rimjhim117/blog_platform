@@ -4,12 +4,20 @@ import axios from 'axios';
 import { FaPen, FaTag, FaSave, FaTimes, FaHeart, FaLightbulb, FaSearch, FaCut, FaPalette, FaGem } from 'react-icons/fa';
 import LoadingSpinner from '../components/LoadingSpinner';
 
+const PRESET_IMAGES = [
+  { name: 'Abstract Pastel', url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80' },
+  { name: 'Glassmorphic Aurora', url: 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=800&q=80' },
+  { name: 'Gradient Mesh', url: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=800&q=80' },
+  { name: 'Abstract Fluid', url: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&w=800&q=80' }
+];
+
 const EditPost = () => {
   const { id } = useParams();
   const [formData, setFormData] = useState({
     title: '',
     content: '',
-    tags: ''
+    tags: '',
+    coverImage: ''
   });
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -29,7 +37,8 @@ const EditPost = () => {
       setFormData({
         title: post.title || '',
         content: post.content || '',
-        tags: post.tags ? post.tags.join(', ') : ''
+        tags: post.tags ? post.tags.join(', ') : '',
+        coverImage: post.coverImage || ''
       });
     } catch (error) {
       setError('Failed to load post. Please try again.');
@@ -61,7 +70,8 @@ const EditPost = () => {
       const postData = {
         title: formData.title.trim(),
         content: formData.content.trim(),
-        tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag)
+        tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+        coverImage: formData.coverImage
       };
 
       await axios.put(`/posts/${id}`, postData);
@@ -157,6 +167,42 @@ const EditPost = () => {
               <p className="text-sm text-gray-500 mt-2">
                 Add tags to help readers discover your story
               </p>
+            </div>
+
+            {/* Cover Image */}
+            <div className="mb-8">
+              <label className="block text-lg font-semibold text-gray-700 mb-3">
+                Cover Image
+              </label>
+              
+              {/* Presets Grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+                {PRESET_IMAGES.map((img, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, coverImage: img.url }))}
+                    className={`relative aspect-video rounded-2xl overflow-hidden border-2 transition duration-300 ${
+                      formData.coverImage === img.url ? 'border-pink-500 shadow-md scale-[1.02]' : 'border-transparent hover:border-gray-300'
+                    }`}
+                  >
+                    <img src={img.url} alt={img.name} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-3">
+                      <span className="text-[10px] font-bold text-white tracking-wider uppercase">{img.name}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              {/* Custom Input */}
+              <input
+                type="text"
+                name="coverImage"
+                value={formData.coverImage || ''}
+                onChange={handleChange}
+                placeholder="Or paste a custom image URL (e.g. Unsplash link)"
+                className="w-full px-6 py-4 border border-pink-100 rounded-2xl bg-white/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 transition duration-300 shadow-inner text-gray-800"
+              />
             </div>
 
             {/* Content */}

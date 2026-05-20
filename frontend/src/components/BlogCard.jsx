@@ -1,8 +1,55 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FaCalendar, FaClock, FaArrowRight } from "react-icons/fa";
+import axios from "axios";
+import { useAuth } from "../contexts/AuthContext";
+import { FaCalendar, FaClock, FaArrowRight, FaHeart, FaRegHeart, FaBookmark, FaRegBookmark } from "react-icons/fa";
 
 const BlogCard = ({ post }) => {
+  const { user, isAuthenticated } = useAuth();
+  const [likes, setLikes] = useState(post.likes || []);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      const userId = user.id || user._id;
+      setIsBookmarked(user.bookmarks?.includes(post._id) || false);
+    } else {
+      setIsBookmarked(false);
+    }
+  }, [user, post._id]);
+
+  const handleLike = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isAuthenticated) {
+      alert("Please log in to like posts.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(`/posts/${post._id}/like`);
+      setLikes(response.data.likes);
+    } catch (err) {
+      console.error("Error liking post:", err);
+    }
+  };
+
+  const handleBookmark = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isAuthenticated) {
+      alert("Please log in to bookmark posts.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(`/posts/${post._id}/bookmark`);
+      setIsBookmarked(response.data.bookmarks.includes(post._id));
+    } catch (err) {
+      console.error("Error bookmarking post:", err);
+    }
+  };
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -45,12 +92,25 @@ const BlogCard = ({ post }) => {
     card.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
   };
 
+  const isLiked = likes.includes(user?.id || user?._id);
+
   return (
     <div 
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className="group bg-white/60 backdrop-blur-md rounded-[2rem] p-8 border border-white hover:border-pink-200/50 transition-shadow duration-500 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_20px_50px_rgba(244,63,94,0.1)] flex flex-col h-full will-change-transform"
     >
+      {/* Cover Image Container */}
+      {post.coverImage && (
+        <div className="relative aspect-[21/9] rounded-2xl overflow-hidden mb-6 group-hover:shadow-md transition-shadow duration-300">
+          <img 
+            src={post.coverImage} 
+            alt={post.title} 
+            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+          />
+        </div>
+      )}
+
       {/* Category & Reading Time Row */}
       <div className="flex items-center justify-between mb-6">
         {post.category ? (
@@ -96,13 +156,40 @@ const BlogCard = ({ post }) => {
           </div>
         </div>
         
-        <Link
-          to={`/blog/${post._id}`}
-          className="inline-flex items-center text-sm font-bold text-pink-500 hover:text-pink-600 transition-colors duration-300 group/link"
-        >
-          <span>Read</span>
-          <FaArrowRight className="ml-1.5 transform group-hover/link:translate-x-1 transition-transform duration-300 text-xs" />
-        </Link>
+        <div className="flex items-center space-x-4">
+          <button 
+            onClick={handleLike} 
+            className="flex items-center space-x-1 text-gray-400 hover:text-pink-500 transition-colors duration-300"
+            title={isLiked ? "Unlike" : "Like"}
+          >
+            {isLiked ? (
+              <FaHeart className="text-pink-500 text-base" />
+            ) : (
+              <FaRegHeart className="text-base" />
+            )}
+            <span className="text-xs font-semibold">{likes.length}</span>
+          </button>
+          
+          <button 
+            onClick={handleBookmark} 
+            className="text-gray-400 hover:text-purple-500 transition-colors duration-300"
+            title={isBookmarked ? "Remove Bookmark" : "Bookmark"}
+          >
+            {isBookmarked ? (
+              <FaBookmark className="text-purple-500 text-base" />
+            ) : (
+              <FaRegBookmark className="text-base" />
+            )}
+          </button>
+
+          <Link
+            to={`/blog/${post._id}`}
+            className="inline-flex items-center text-sm font-bold text-pink-500 hover:text-pink-600 transition-colors duration-300 group/link"
+          >
+            <span>Read</span>
+            <FaArrowRight className="ml-1.5 transform group-hover/link:translate-x-1 transition-transform duration-300 text-xs" />
+          </Link>
+        </div>
       </div>
     </div>
   );

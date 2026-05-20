@@ -6,6 +6,8 @@ const postSchema = new mongoose.Schema(
     content: { type: String, required: true },
     tags: [{ type: String }], // ADD THIS
     category: { type: String },
+    coverImage: { type: String },
+    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     author: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
