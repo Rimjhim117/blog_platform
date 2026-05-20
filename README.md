@@ -1,4 +1,4 @@
-# 📝 Blog Platform – Full-Stack MERN Application
+#  Blog Platform – Full-Stack MERN Application
 
 A modern full-stack blog platform built using the **MERN** stack (MongoDB, Express, React, Node.js). It supports user authentication and CRUD functionality for posts, delivering a sleek, responsive frontend styled with a modern, Figma-inspired aesthetic.
 
@@ -6,40 +6,40 @@ A modern full-stack blog platform built using the **MERN** stack (MongoDB, Expre
 
 ## ⚙ Key Features
 
-- **🔐 User Authentication**  
+- ** User Authentication**  
   Secure user registration and login powered by **JSON Web Tokens (JWT)**.
 
-- **✏️ CRUD Operations**  
+- ** CRUD Operations**  
   Create, read, update, and delete blog posts via a RESTful API.
 
-- **🌿 RESTful Design**  
+- ** RESTful Design**  
   Clean, modular backend logic using **Node.js** and **Express**.
 
 - **🗄 MongoDB + Mongoose**  
   Flexible NoSQL database structure with powerful schema modeling.
 
-- **🔒 Password Security**  
+- **Password Security**  
   Password hashing and salting using **bcrypt.js**.
 
-- **🆔 Token-Based Security**  
+- ** Token-Based Security**  
   Secure access and authorization flow with **jsonwebtoken**.
 
-- **🎨 Modern UI (React)**  
+- ** Modern UI (React)**  
   Responsive interface styled using **Tailwind CSS**, complete with reusable components and **React Icons**.
 
-- **💾 Draft Auto-save**  
+- ** Draft Auto-save**  
   Persist drafts automatically in local storage, with an interactive recovery banner on return.
 
-- **🖼️ Cover Image Selector**  
+- ** Cover Image Selector**  
   Add Unsplash-based cover image presets or custom URL inputs for blog posts.
 
-- **❤️ Likes & Bookmarks**  
+- **Likes & Bookmarks**  
   Full backend integration for liking and bookmarking posts.
 
-- **🔍 Dynamic Search & Tag Filter**  
+- **Dynamic Search & Tag Filter**  
   Floating search bar with backend-integrated dynamic tag filtering pills.
 
-- **👤 Saved Stories Profile Tab**  
+- ** Saved Stories Profile Tab**  
   Tabbed navigation in user profiles for managing my posts and bookmarked stories.
 
 ---
@@ -70,13 +70,13 @@ JWT_SECRET=your_secret_key
 
 ---
 
-## ▶️ Running the Backend
+##  Running the Backend
 
 - **Start the server in development mode**  
   ```bash
   npm run dev
   ```
-## ▶️ Running the Frontend
+##  Running the Frontend
 
 - **Install dependencies and start the React app**  
   ```bash
@@ -85,17 +85,17 @@ JWT_SECRET=your_secret_key
   npm run dev
   ```
 
-## 💡 Future Enhancements
+## Future Enhancements
 
-- **🖼️ Image Upload Support**  
+- ** Image Upload Support**  
   Allow users to upload images for their blog posts using services like Cloudinary.
 
-- **📝 Rich Text Editor**  
+- ** Rich Text Editor**  
   Enhance the blog writing experience with a full-featured editor.
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 - **Fork the repository**  
 - **Submit issues or feature requests**  
@@ -103,10 +103,10 @@ JWT_SECRET=your_secret_key
 
 ---
 
-## 📄 License
+##  License
 
 - Distributed under the **MIT License**  
-## 👩‍💻 Author
+##  Author
 
 - **Rimjhim Srivastava**  
   GitHub: [rimjhim117](https://github.com/rimjhim117)
