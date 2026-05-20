@@ -27,6 +27,21 @@ A modern full-stack blog platform built using the **MERN** stack (MongoDB, Expre
 - **🎨 Modern UI (React)**  
   Responsive interface styled using **Tailwind CSS**, complete with reusable components and **React Icons**.
 
+- **💾 Draft Auto-save**  
+  Persist drafts automatically in local storage, with an interactive recovery banner on return.
+
+- **🖼️ Cover Image Selector**  
+  Add Unsplash-based cover image presets or custom URL inputs for blog posts.
+
+- **❤️ Likes & Bookmarks**  
+  Full backend integration for liking and bookmarking posts.
+
+- **🔍 Dynamic Search & Tag Filter**  
+  Floating search bar with backend-integrated dynamic tag filtering pills.
+
+- **👤 Saved Stories Profile Tab**  
+  Tabbed navigation in user profiles for managing my posts and bookmarked stories.
+
 ---
 
 ##  🛠 Technologies Used
@@ -68,6 +83,8 @@ JWT_SECRET=your_secret_key
   cd frontend
   npm install
   npm run dev
+  ```
+
 ## 💡 Future Enhancements
 
 - **🖼️ Image Upload Support**  
@@ -75,12 +92,6 @@ JWT_SECRET=your_secret_key
 
 - **📝 Rich Text Editor**  
   Enhance the blog writing experience with a full-featured editor.
-
-- **🔍 Search & Filter**  
-  Add searching and filtering by tags, categories, or authors.
-
-- **👥 User Profiles**  
-  Personalized dashboards with author bios and post history.
 
 ---
 
