@@ -4,7 +4,7 @@ A modern full-stack blog platform built using the **MERN** stack (MongoDB, Expre
 
 ---
 
-## ⚙ Key Features
+##  Key Features
 
 - ** User Authentication**  
   Secure user registration and login powered by **JSON Web Tokens (JWT)**.
@@ -15,7 +15,7 @@ A modern full-stack blog platform built using the **MERN** stack (MongoDB, Expre
 - ** RESTful Design**  
   Clean, modular backend logic using **Node.js** and **Express**.
 
-- **🗄 MongoDB + Mongoose**  
+- ** MongoDB + Mongoose**  
   Flexible NoSQL database structure with powerful schema modeling.
 
 - **Password Security**  
@@ -44,7 +44,7 @@ A modern full-stack blog platform built using the **MERN** stack (MongoDB, Expre
 
 ---
 
-##  🛠 Technologies Used
+##   Technologies Used
 
 | Backend | Frontend |
 |---------|----------|
