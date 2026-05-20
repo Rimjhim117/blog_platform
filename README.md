@@ -24,7 +24,7 @@ A modern full-stack blog platform built using the **MERN** stack (MongoDB, Expre
 - Token-Based Security  
   Secure access and authorization flow with **jsonwebtoken**.
 
-- ** Modern UI (React)**  
+- ** Modern UI (React)
   Responsive interface styled using **Tailwind CSS**, complete with reusable components and **React Icons**.
 
 -  Draft Auto-save 
