@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import BlogCard from '../components/BlogCard';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { FaSearch, FaFilter, FaPlus } from 'react-icons/fa';
+import { FaSearch, FaFilter, FaPlus, FaArrowRight } from 'react-icons/fa';
 import { useAuth } from '../contexts/AuthContext';
 
 const Blog = () => {
@@ -89,24 +89,30 @@ const Blog = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 pt-24 pb-12">
       {/* Header Section */}
-      <div className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-            <div className="mb-6 lg:mb-0">
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">Blog Posts</h1>
-              <p className="text-gray-600">
-                Discover {totalPosts} amazing stories from our community
+      <div className="relative overflow-hidden mb-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between bg-white/70 backdrop-blur-xl p-10 rounded-[2rem] shadow-sm border border-white/50">
+            <div className="mb-6 lg:mb-0 max-w-2xl">
+              <div className="inline-flex items-center space-x-2 mb-4">
+                <span className="h-px w-8 bg-pink-500"></span>
+                <span className="text-sm font-bold text-pink-500 tracking-wider uppercase">Explore</span>
+              </div>
+              <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">
+                Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">Stories</span>
+              </h1>
+              <p className="text-lg text-gray-600 font-light">
+                Discover {totalPosts} amazing stories, ideas, and expertise from our community of writers.
               </p>
             </div>
             
             {isAuthenticated && (
               <Link
                 to="/create-post"
-                className="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300 font-medium"
+                className="inline-flex items-center justify-center bg-gray-900 text-white px-8 py-4 rounded-xl hover:bg-gray-800 transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-1 font-semibold group"
               >
-                <FaPlus className="mr-2" />
+                <FaPlus className="mr-2 group-hover:rotate-90 transition-transform duration-300" />
                 Write a Post
               </Link>
             )}
@@ -114,38 +120,38 @@ const Blog = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Search and Filter Bar */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-          <div className="flex flex-col lg:flex-row gap-4">
+        <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-gray-100 p-6 mb-12">
+          <div className="flex flex-col lg:flex-row gap-6">
             {/* Search */}
             <form onSubmit={handleSearch} className="flex-1">
-              <div className="relative">
+              <div className="relative group">
                 <input
                   type="text"
-                  placeholder="Search posts..."
+                  placeholder="Search for inspiration..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full pl-12 pr-4 py-4 bg-gray-50/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all duration-300 outline-none text-gray-700"
                 />
-                <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-pink-500 transition-colors duration-300" />
               </div>
             </form>
 
             {/* Sort Options */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-4 bg-gray-50/50 px-6 py-2 rounded-xl border border-gray-200">
               <div className="flex items-center">
                 <FaFilter className="text-gray-400 mr-2" />
-                <span className="text-sm text-gray-600 mr-2">Sort by:</span>
+                <span className="text-sm font-semibold text-gray-600 mr-4">Sort by:</span>
               </div>
               
               <div className="flex space-x-2">
                 <button
                   onClick={() => handleSortChange('createdAt')}
-                  className={`px-3 py-1 rounded-md text-sm font-medium transition duration-200 ${
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
                     sortBy === 'createdAt'
-                      ? 'bg-blue-100 text-blue-800'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      ? 'bg-white text-pink-600 shadow-sm border border-gray-100'
+                      : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
                   Date {sortBy === 'createdAt' && (sortOrder === 'desc' ? '↓' : '↑')}
@@ -153,10 +159,10 @@ const Blog = () => {
                 
                 <button
                   onClick={() => handleSortChange('title')}
-                  className={`px-3 py-1 rounded-md text-sm font-medium transition duration-200 ${
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
                     sortBy === 'title'
-                      ? 'bg-blue-100 text-blue-800'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      ? 'bg-white text-pink-600 shadow-sm border border-gray-100'
+                      : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
                   Title {sortBy === 'title' && (sortOrder === 'desc' ? '↓' : '↑')}
@@ -168,28 +174,30 @@ const Blog = () => {
 
         {/* Content */}
         {loading ? (
-          <LoadingSpinner />
+          <div className="py-20 flex justify-center">
+            <LoadingSpinner />
+          </div>
         ) : error ? (
-          <div className="text-center py-12">
-            <div className="text-red-600 mb-4">{error}</div>
+          <div className="text-center py-20 bg-white/60 rounded-3xl backdrop-blur-sm border border-gray-100">
+            <div className="text-red-500 mb-6 font-medium text-lg">{error}</div>
             <button
               onClick={fetchPosts}
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-300"
+              className="bg-gray-900 text-white px-8 py-3 rounded-xl hover:bg-gray-800 transition duration-300 font-semibold shadow-md"
             >
               Try Again
             </button>
           </div>
         ) : posts.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="text-gray-500 text-lg mb-4">
-              {searchTerm ? 'No posts found matching your search.' : 'No posts available yet.'}
+          <div className="text-center py-32 bg-white/60 rounded-3xl backdrop-blur-sm border border-gray-100">
+            <div className="text-gray-500 text-xl mb-8 font-light">
+              {searchTerm ? 'No stories found matching your search.' : 'Our canvas is empty right now.'}
             </div>
             {!searchTerm && isAuthenticated && (
               <Link
                 to="/create-post"
-                className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300"
+                className="inline-flex items-center bg-gradient-to-r from-pink-500 to-purple-600 text-white px-8 py-4 rounded-xl hover:from-pink-600 hover:to-purple-700 transition duration-300 shadow-lg font-semibold"
               >
-                Write the First Post
+                Write the First Story <FaArrowRight className="ml-2" />
               </Link>
             )}
             {searchTerm && (
@@ -198,7 +206,7 @@ const Blog = () => {
                   setSearchTerm('');
                   setCurrentPage(1);
                 }}
-                className="inline-block bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition duration-300"
+                className="inline-flex items-center bg-gray-900 text-white px-8 py-4 rounded-xl hover:bg-gray-800 transition duration-300 shadow-lg font-semibold"
               >
                 Clear Search
               </button>
@@ -207,7 +215,7 @@ const Blog = () => {
         ) : (
           <>
             {/* Posts Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-16">
               {posts.map((post) => (
                 <BlogCard key={post._id} post={post} />
               ))}
@@ -215,33 +223,35 @@ const Blog = () => {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-center space-x-2">
+              <div className="flex items-center justify-center space-x-2 pb-12">
                 <button
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-5 py-3 text-sm font-semibold text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-sm"
                 >
                   Previous
                 </button>
 
-                {generatePageNumbers().map((page) => (
-                  <button
-                    key={page}
-                    onClick={() => handlePageChange(page)}
-                    className={`px-4 py-2 text-sm font-medium rounded-lg ${
-                      page === currentPage
-                        ? 'bg-blue-600 text-white'
-                        : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
-                    }`}
-                  >
-                    {page}
-                  </button>
-                ))}
+                <div className="hidden sm:flex space-x-2">
+                  {generatePageNumbers().map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`w-12 h-12 flex items-center justify-center text-sm font-bold rounded-xl transition-all duration-300 shadow-sm ${
+                        page === currentPage
+                          ? 'bg-gray-900 text-white border-transparent'
+                          : 'text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 hover:text-gray-900'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                </div>
 
                 <button
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-5 py-3 text-sm font-semibold text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-sm"
                 >
                   Next
                 </button>

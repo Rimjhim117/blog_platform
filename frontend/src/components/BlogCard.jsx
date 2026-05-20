@@ -1,113 +1,107 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaUser, FaCalendar, FaClock } from "react-icons/fa";
+import { FaCalendar, FaClock, FaArrowRight } from "react-icons/fa";
 
 const BlogCard = ({ post }) => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
       year: "numeric",
-      month: "long",
+      month: "short",
       day: "numeric",
     });
   };
 
   const getReadingTime = (content) => {
     const wordsPerMinute = 200;
-    const words = content.split(" ").length;
+    const words = content ? content.split(" ").length : 0;
     const readingTime = Math.ceil(words / wordsPerMinute);
-    return readingTime;
+    return readingTime || 1;
   };
 
-  const truncateContent = (content, maxLength = 150) => {
+  const truncateContent = (content, maxLength = 120) => {
+    if (!content) return "";
     if (content.length <= maxLength) return content;
     return content.substring(0, maxLength) + "...";
   };
 
-  // Array of soft gradient combinations (pastel, subtle)
-  const gradients = [
-    "from-pink-200 via-pink-100 to-purple-100",
-    "from-blue-200 via-blue-100 to-purple-100",
-    "from-purple-200 via-purple-100 to-pink-100",
-    "from-yellow-200 via-yellow-100 to-pink-100",
-    "from-green-200 via-green-100 to-blue-100",
-    "from-indigo-200 via-indigo-100 to-purple-100",
-  ];
+  const handleMouseMove = (e) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const xc = rect.width / 2;
+    const yc = rect.height / 2;
+    const rotateX = -(yc - y) / 12; // tilt depth
+    const rotateY = (x - xc) / 12;
+    
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+    card.style.transition = 'none';
+  };
 
-  const gradientIndex = post._id ? post._id.length % gradients.length : 0;
-  const selectedGradient = gradients[gradientIndex];
+  const handleMouseLeave = (e) => {
+    const card = e.currentTarget;
+    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+    card.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+  };
 
   return (
-    <div className="group bg-white rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-pink-200 transform hover:-translate-y-1">
-      {/* Header Gradient Banner */}
-      <div
-        className={`h-32 bg-gradient-to-br ${selectedGradient} flex items-center justify-center relative`}
-      >
-        <div className="absolute inset-0 bg-white/10"></div>
-        <h3 className="relative z-10 text-gray-700 text-lg font-semibold text-center px-4 line-clamp-2">
-          {post.title}
-        </h3>
+    <div 
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="group bg-white/60 backdrop-blur-md rounded-[2rem] p-8 border border-white hover:border-pink-200/50 transition-shadow duration-500 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_20px_50px_rgba(244,63,94,0.1)] flex flex-col h-full will-change-transform"
+    >
+      {/* Category & Reading Time Row */}
+      <div className="flex items-center justify-between mb-6">
+        {post.category ? (
+          <span className="bg-pink-100/60 text-pink-600 text-xs font-bold px-3.5 py-1.5 rounded-full uppercase tracking-wider border border-pink-200/50">
+            {post.category}
+          </span>
+        ) : (
+          <span className="bg-purple-100/60 text-purple-600 text-xs font-bold px-3.5 py-1.5 rounded-full uppercase tracking-wider border border-purple-200/50">
+            Story
+          </span>
+        )}
+        <div className="flex items-center text-xs text-gray-400 font-medium">
+          <FaClock className="mr-1.5 text-gray-300" />
+          <span>{getReadingTime(post.content)} min read</span>
+        </div>
       </div>
 
-      <div className="p-6">
-        {/* Title */}
-        <Link to={`/blog/${post._id}`}>
-          <h2 className="text-xl font-bold text-gray-800 mb-3 hover:text-pink-500 transition-colors duration-300 line-clamp-2">
-            {post.title}
-          </h2>
-        </Link>
+      {/* Title */}
+      <Link to={`/blog/${post._id}`} className="block mb-4">
+        <h3 className="text-2xl font-bold text-gray-900 hover:text-pink-600 transition-colors duration-300 leading-snug line-clamp-2">
+          {post.title}
+        </h3>
+      </Link>
 
-        {/* Content Preview */}
-        <p className="text-gray-600 mb-4 line-clamp-3 leading-relaxed">
-          {truncateContent(post.content)}
-        </p>
+      {/* Content Excerpt */}
+      <p className="text-gray-500 font-light text-base leading-relaxed mb-8 line-clamp-3">
+        {truncateContent(post.content)}
+      </p>
 
-        {/* Tags */}
-        {post.tags && post.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-4">
-            {post.tags.slice(0, 3).map((tag, index) => (
-              <span
-                key={index}
-                className="bg-gradient-to-r from-pink-100 to-purple-100 text-pink-700 text-xs px-3 py-1 rounded-full border border-pink-200"
-              >
-                #{tag}
-              </span>
-            ))}
-            {post.tags.length > 3 && (
-              <span className="text-gray-400 text-xs bg-gray-50 px-3 py-1 rounded-full">
-                +{post.tags.length - 3} more
-              </span>
-            )}
+      {/* Footer Info Row */}
+      <div className="flex items-center justify-between mt-auto pt-6 border-t border-gray-100/50">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 bg-gradient-to-tr from-pink-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-sm shadow-pink-200">
+            {post.author?.username?.charAt(0)?.toUpperCase() || "A"}
           </div>
-        )}
-
-        {/* Meta */}
-        <div className="flex items-center justify-between text-xs text-gray-500 mb-6">
-          <div className="flex items-center space-x-2 bg-pink-50 px-3 py-1 rounded-full">
-            <div className="w-5 h-5 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full flex items-center justify-center">
-              <FaUser className="text-white text-xs" />
-            </div>
-            <span className="font-medium">{post.author?.username || "Anonymous"}</span>
-          </div>
-
-          <div className="flex items-center space-x-4 text-gray-400">
-            <div className="flex items-center">
-              <FaCalendar className="mr-1" />
-              <span>{formatDate(post.createdAt)}</span>
-            </div>
-            <div className="flex items-center">
-              <FaClock className="mr-1" />
-              <span>{getReadingTime(post.content)} min</span>
-            </div>
+          <div>
+            <p className="text-sm font-bold text-gray-800">
+              {post.author?.username || "Anonymous"}
+            </p>
+            <p className="text-xs text-gray-400">
+              {formatDate(post.createdAt)}
+            </p>
           </div>
         </div>
-
-        {/* Button */}
+        
         <Link
           to={`/blog/${post._id}`}
-          className="block w-full text-center bg-gradient-to-r from-pink-400 to-purple-500 text-white py-3 px-4 rounded-full hover:from-pink-500 hover:to-purple-600 transition-all duration-300 text-sm font-medium shadow-md hover:shadow-lg"
+          className="inline-flex items-center text-sm font-bold text-pink-500 hover:text-pink-600 transition-colors duration-300 group/link"
         >
-          Read This Story
+          <span>Read</span>
+          <FaArrowRight className="ml-1.5 transform group-hover/link:translate-x-1 transition-transform duration-300 text-xs" />
         </Link>
       </div>
     </div>

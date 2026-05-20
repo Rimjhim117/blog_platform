@@ -12,7 +12,9 @@ export const useAuth = () => {
 };
 
 // Configure axios defaults
-const API_BASE_URL = 'http://localhost:5000/api'; // Adjust if your backend port is different
+const API_BASE_URL = window.location.hostname === 'localhost' 
+  ? 'http://localhost:5000/api' 
+  : '/api'; 
 axios.defaults.baseURL = API_BASE_URL;
 
 export const AuthProvider = ({ children }) => {

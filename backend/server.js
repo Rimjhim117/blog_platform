@@ -12,7 +12,7 @@ const app = express();
 
 // CORS Configuration - ADD THIS
 app.use(cors({
-  origin: 'http://localhost:3000', // Your React app
+  origin: ['http://localhost:3000', 'http://localhost:5173'], // Allow both old CRA and new Vite ports
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']

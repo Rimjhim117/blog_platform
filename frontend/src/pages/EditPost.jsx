@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaPen, FaTag, FaSave, FaTimes, FaHeart } from 'react-icons/fa';
+import { FaPen, FaTag, FaSave, FaTimes, FaHeart, FaLightbulb, FaSearch, FaCut, FaPalette, FaGem } from 'react-icons/fa';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const EditPost = () => {
@@ -95,25 +95,24 @@ const EditPost = () => {
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 py-8">
       <div className="max-w-4xl mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg mb-4">
-            <FaPen className="text-purple-400 mr-2" />
-            <span className="font-medium text-gray-600">Edit Your Story</span>
+        <div className="text-left mb-10 max-w-2xl">
+          <div className="inline-flex items-center bg-purple-100/60 backdrop-blur-md px-4 py-2 rounded-full border border-purple-200 mb-6">
+            <span className="text-xs font-bold text-purple-600 tracking-wider uppercase">Edit Post</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-            Polish Your{' '}
+          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 tracking-tight leading-tight">
+            Edit your{' '}
             <span className="bg-gradient-to-r from-purple-500 to-pink-600 bg-clip-text text-transparent">
-              Masterpiece
+              story
             </span>
           </h1>
-          <p className="text-xl text-gray-600">
-            Every story can be made even more beautiful ✨
+          <p className="text-lg text-gray-600 font-light">
+            Refine your draft, update tags, or add updates for your readers.
           </p>
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="bg-white rounded-3xl shadow-xl p-8 border border-purple-100">
+          <div className="bg-white/70 backdrop-blur-md rounded-[2.5rem] shadow-xl p-8 sm:p-10 border border-white/80">
             {error && (
               <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl flex items-center">
                 <FaTimes className="mr-2 flex-shrink-0" />
@@ -124,7 +123,7 @@ const EditPost = () => {
             {/* Title */}
             <div className="mb-8">
               <label htmlFor="title" className="block text-lg font-semibold text-gray-700 mb-3">
-                Story Title ✨
+                Story Title
               </label>
               <input
                 type="text"
@@ -133,7 +132,7 @@ const EditPost = () => {
                 value={formData.title}
                 onChange={handleChange}
                 placeholder="What would you like to call your story?"
-                className="w-full px-6 py-4 text-xl border border-purple-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 transition duration-300"
+                className="w-full px-6 py-4 text-xl border border-purple-100 rounded-2xl bg-white/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-300 transition duration-300 shadow-inner text-gray-800"
                 required
               />
             </div>
@@ -141,7 +140,7 @@ const EditPost = () => {
             {/* Tags */}
             <div className="mb-8">
               <label htmlFor="tags" className="block text-lg font-semibold text-gray-700 mb-3">
-                Tags (Optional) 🏷️
+                Tags (Optional)
               </label>
               <div className="relative">
                 <FaTag className="absolute left-4 top-1/2 transform -translate-y-1/2 text-pink-400" />
@@ -152,7 +151,7 @@ const EditPost = () => {
                   value={formData.tags}
                   onChange={handleChange}
                   placeholder="technology, lifestyle, travel (separate with commas)"
-                  className="w-full pl-12 pr-6 py-4 border border-pink-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 transition duration-300"
+                  className="w-full pl-12 pr-6 py-4 border border-pink-100 rounded-2xl bg-white/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-300 transition duration-300 shadow-inner text-gray-800"
                 />
               </div>
               <p className="text-sm text-gray-500 mt-2">
@@ -164,7 +163,7 @@ const EditPost = () => {
             <div className="mb-8">
               <div className="flex items-center justify-between mb-3">
                 <label htmlFor="content" className="text-lg font-semibold text-gray-700">
-                  Your Story 📖
+                  Your Story
                 </label>
                 <div className="flex items-center space-x-4 text-sm text-gray-500 bg-gray-50 px-4 py-2 rounded-full">
                   <span>{getWordCount()} words</span>
@@ -178,8 +177,8 @@ const EditPost = () => {
                 rows={20}
                 value={formData.content}
                 onChange={handleChange}
-                placeholder="Tell your story... ✍️"
-                className="w-full px-6 py-4 border border-blue-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition duration-300 resize-none text-lg leading-relaxed"
+                placeholder="Tell your story..."
+                className="w-full px-6 py-4 border border-blue-100 rounded-2xl bg-white/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition duration-300 resize-none text-lg leading-relaxed shadow-inner text-gray-800"
                 required
               />
             </div>
@@ -235,44 +234,29 @@ const EditPost = () => {
         </form>
 
         {/* Editing Tips */}
-        <div className="mt-8 bg-white rounded-3xl shadow-lg p-8 border border-blue-100">
-          <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-            <div className="bg-gradient-to-r from-blue-100 to-purple-100 p-3 rounded-2xl mr-4">
-              ✏️
-            </div>
+        <div className="mt-8 bg-white/40 backdrop-blur-md rounded-[2.5rem] shadow-lg p-10 border border-white/80">
+          <h3 className="text-xs font-bold text-purple-600 bg-purple-100/60 border border-purple-200 px-4 py-2 rounded-full uppercase tracking-wider mb-8 inline-block">
             Editing Tips
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div className="flex items-start">
-                <span className="text-2xl mr-3">🔍</span>
-                <div>
-                  <h4 className="font-semibold text-gray-800">Read it aloud</h4>
-                  <p className="text-gray-600 text-sm">This helps catch awkward phrasing and improve flow.</p>
-                </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-6">
+              <div>
+                <h4 className="font-bold text-gray-950 mb-2 text-lg">Read it aloud</h4>
+                <p className="text-gray-600 text-sm leading-relaxed font-light">This helps catch awkward phrasing and improve flow.</p>
               </div>
-              <div className="flex items-start">
-                <span className="text-2xl mr-3">✂️</span>
-                <div>
-                  <h4 className="font-semibold text-gray-800">Cut unnecessary words</h4>
-                  <p className="text-gray-600 text-sm">Every word should add value to your story.</p>
-                </div>
+              <div>
+                <h4 className="font-bold text-gray-950 mb-2 text-lg">Cut unnecessary words</h4>
+                <p className="text-gray-600 text-sm leading-relaxed font-light">Every word should add value to your story.</p>
               </div>
             </div>
-            <div className="space-y-4">
-              <div className="flex items-start">
-                <span className="text-2xl mr-3">🎨</span>
-                <div>
-                  <h4 className="font-semibold text-gray-800">Check your structure</h4>
-                  <p className="text-gray-600 text-sm">Make sure your ideas flow logically from one to the next.</p>
-                </div>
+            <div className="space-y-6">
+              <div>
+                <h4 className="font-bold text-gray-950 mb-2 text-lg">Check your structure</h4>
+                <p className="text-gray-600 text-sm leading-relaxed font-light">Make sure your ideas flow logically from one to the next.</p>
               </div>
-              <div className="flex items-start">
-                <span className="text-2xl mr-3">💎</span>
-                <div>
-                  <h4 className="font-semibold text-gray-800">Polish your ending</h4>
-                  <p className="text-gray-600 text-sm">A strong conclusion leaves readers thinking.</p>
-                </div>
+              <div>
+                <h4 className="font-bold text-gray-950 mb-2 text-lg">Polish your ending</h4>
+                <p className="text-gray-600 text-sm leading-relaxed font-light">A strong conclusion leaves readers thinking.</p>
               </div>
             </div>
           </div>

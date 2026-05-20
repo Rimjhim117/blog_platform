@@ -2,10 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import {
   FaBookOpen,
-  FaTwitter,
-  FaInstagram,
-  FaLinkedin,
-  FaEnvelope,
   FaArrowUp,
 } from "react-icons/fa";
 
@@ -15,56 +11,38 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 border-t border-pink-100">
+    <footer className="bg-gradient-to-br from-pink-50/50 via-purple-50/50 to-blue-50/50 border-t border-white backdrop-blur-md relative z-10">
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* Brand Section */}
-          <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="bg-gradient-to-r from-pink-400 to-purple-500 p-3 rounded-2xl shadow-md">
+          <div className="col-span-1 md:col-span-2 space-y-6">
+            <div className="flex items-center space-x-3">
+              <div className="bg-gradient-to-r from-pink-500 to-purple-600 p-3 rounded-2xl shadow-md">
                   <FaBookOpen className="text-white text-lg" />
               </div>
-              <h3 className="text-2xl font-semibold tracking-tight bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              <h3 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
               BlogPlatform
               </h3>
             </div>
-            <p className="text-gray-600 mb-6 leading-relaxed max-w-md">
-              A gentle space where stories bloom  and connections grow. Join
-              our cozy community of writers and readers who believe every voice
-              has something beautiful to share.
+            <p className="text-gray-500 leading-relaxed max-w-md font-light text-base">
+              A quiet sanctuary for writers and storytellers. Share your ideas, read inspired stories, and connect with a thoughtful global community.
             </p>
-            <div className="flex space-x-3">
-              {[
-                { icon: <FaTwitter size={16} />, color: "pink" },
-                { icon: <FaInstagram size={16} />, color: "purple" },
-                { icon: <FaLinkedin size={16} />, color: "blue" },
-                { icon: <FaEnvelope size={16} />, color: "green" },
-              ].map((item, idx) => (
-                <a
-                  key={idx}
-                  href="#"
-                  className={`flex items-center justify-center w-10 h-10 rounded-full border border-${item.color}-200 text-${item.color}-500 hover:text-${item.color}-600 hover:border-${item.color}-300 transition-all duration-300 bg-white/70 backdrop-blur-sm`}
-                >
-                  {item.icon}
-                </a>
-              ))}
-            </div>
           </div>
 
           {/* Quick Links */}
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-sm border border-pink-100">
-            <h4 className="text-lg font-semibold mb-6 text-gray-800">Explore</h4>
-            <div className="space-y-3">
+          <div className="bg-white/40 backdrop-blur-md rounded-[2rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-white">
+            <h4 className="text-lg font-bold mb-6 text-gray-900 tracking-wide">Explore</h4>
+            <div className="space-y-4">
               {[
-                { to: "/", text: "🏠 Home" },
-                { to: "/blog", text: "📖 Stories" },
-                { to: "/about", text: "✨ About Us" },
-                { to: "/contact", text: "💌 Contact" },
+                { to: "/", text: "Home" },
+                { to: "/blog", text: "Stories" },
+                { to: "/about", text: "About Us" },
+                { to: "/contact", text: "Contact" },
               ].map((link, idx) => (
                 <Link
                   key={idx}
                   to={link.to}
-                  className="block text-gray-600 hover:text-pink-500 transition-all duration-300 font-medium hover:translate-x-1"
+                  className="block text-gray-500 hover:text-pink-500 transition-all duration-300 font-medium hover:translate-x-1"
                 >
                   {link.text}
                 </Link>
@@ -73,60 +51,57 @@ const Footer = () => {
           </div>
 
           {/* Community */}
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-sm border border-purple-100">
-            <h4 className="text-lg font-semibold mb-6 text-gray-800">
+          <div className="bg-white/40 backdrop-blur-md rounded-[2rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-white">
+            <h4 className="text-lg font-bold mb-6 text-gray-900 tracking-wide">
               Community
             </h4>
-            <div className="space-y-3">
+            <div className="space-y-4">
               {[
-                "🌸 Writing Tips",
-                "🤝 Community Guidelines",
-                "🔒 Privacy Policy",
-                "📋 Terms of Service",
+                { to: "/blog?category=writing-tips", text: "Writing Tips" },
+                { to: "/about", text: "Community Guidelines" },
+                { to: "/contact", text: "Support" },
+                { to: "/about", text: "Terms of Service" },
               ].map((item, idx) => (
-                <a
+                <Link
                   key={idx}
-                  href="#"
-                  className="block text-gray-600 hover:text-purple-500 transition-all duration-300 font-medium hover:translate-x-1"
+                  to={item.to}
+                  className="block text-gray-500 hover:text-purple-500 transition-all duration-300 font-medium hover:translate-x-1"
                 >
-                  {item}
-                </a>
+                  {item.text}
+                </Link>
               ))}
             </div>
           </div>
         </div>
 
         {/* Newsletter Section */}
-        <div className="mt-16 bg-gradient-to-r from-pink-100 to-purple-100 rounded-2xl p-8 text-center border border-pink-200 shadow-sm">
-          <h4 className="text-2xl font-bold text-gray-800 mb-4">
+        <div className="mt-16 bg-gradient-to-r from-pink-50/50 via-purple-50/50 to-indigo-50/50 rounded-[2.5rem] p-10 text-center border border-white shadow-[0_8px_30px_rgb(0,0,0,0.02)]">
+          <h4 className="text-3xl font-extrabold text-gray-950 mb-3 tracking-tight">
             Stay in the Loop 
           </h4>
-          <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-            Get the latest stories, writing tips, and community updates
-            delivered straight to your inbox with love.
+          <p className="text-gray-500 mb-8 max-w-xl mx-auto font-light leading-relaxed">
+            Get the latest stories, writing tips, and community updates delivered straight to your inbox.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
             <input
               type="email"
-              placeholder="your@email.com"
-              className="flex-1 px-4 py-3 rounded-full border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-300 shadow-sm"
+              placeholder="Enter your email"
+              className="flex-grow px-6 py-4 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-300 shadow-sm bg-white/80"
             />
-            <button className="bg-gradient-to-r from-pink-400 to-purple-500 text-white px-6 py-3 rounded-full hover:from-pink-500 hover:to-purple-600 transition duration-300 shadow-md text-sm font-medium">
+            <button className="bg-gray-900 text-white px-8 py-4 rounded-2xl hover:bg-gray-800 transition duration-300 shadow-md font-semibold text-base shrink-0">
               Subscribe
             </button>
           </div>
         </div>
 
         {/* Bottom Section */}
-        <div className="border-t border-pink-200 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-gray-500 text-sm text-center md:text-left mb-4 md:mb-0">
-            © {new Date().getFullYear()} BlogPlatform. Made with{" "}
-            <FaBookOpen className="inline text-pink-400 mx-1" /> for storytellers
-            everywhere.
+        <div className="border-t border-gray-100 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <p className="text-gray-400 text-sm text-center md:text-left mb-4 md:mb-0 font-light">
+            © {new Date().getFullYear()} BlogPlatform. Built for storytellers everywhere.
           </p>
           <button
             onClick={scrollToTop}
-            className="bg-white/80 backdrop-blur-sm p-3 rounded-full border border-pink-100 hover:border-pink-200 text-pink-500 hover:text-pink-600 transition-all duration-300"
+            className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-gray-200 hover:border-pink-300 hover:text-pink-500 text-gray-500 transition-all duration-300 shadow-sm hover:shadow-md"
             aria-label="Scroll to top"
           >
             <FaArrowUp size={16} />
