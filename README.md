@@ -6,40 +6,40 @@ A modern full-stack blog platform built using the **MERN** stack (MongoDB, Expre
 
 ##  Key Features
 
-- ** User Authentication**  
+-  User Authentication
   Secure user registration and login powered by **JSON Web Tokens (JWT)**.
 
-- ** CRUD Operations**  
+-  CRUD Operations  
   Create, read, update, and delete blog posts via a RESTful API.
 
-- ** RESTful Design**  
+-  RESTful Design  
   Clean, modular backend logic using **Node.js** and **Express**.
 
-- ** MongoDB + Mongoose**  
+-  MongoDB + Mongoose 
   Flexible NoSQL database structure with powerful schema modeling.
 
-- **Password Security**  
+- Password Security 
   Password hashing and salting using **bcrypt.js**.
 
-- ** Token-Based Security**  
+- Token-Based Security  
   Secure access and authorization flow with **jsonwebtoken**.
 
 - ** Modern UI (React)**  
   Responsive interface styled using **Tailwind CSS**, complete with reusable components and **React Icons**.
 
-- ** Draft Auto-save**  
+-  Draft Auto-save 
   Persist drafts automatically in local storage, with an interactive recovery banner on return.
 
-- ** Cover Image Selector**  
+-  Cover Image Selector 
   Add Unsplash-based cover image presets or custom URL inputs for blog posts.
 
-- **Likes & Bookmarks**  
+- Likes & Bookmarks 
   Full backend integration for liking and bookmarking posts.
 
-- **Dynamic Search & Tag Filter**  
+- Dynamic Search & Tag Filter  
   Floating search bar with backend-integrated dynamic tag filtering pills.
 
-- ** Saved Stories Profile Tab**  
+- Saved Stories Profile Tab  
   Tabbed navigation in user profiles for managing my posts and bookmarked stories.
 
 ---
