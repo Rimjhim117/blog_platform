@@ -2,6 +2,8 @@
 
 A modern full-stack blog platform built using the **MERN** stack (MongoDB, Express, React, Node.js). It supports user authentication and CRUD functionality for posts, delivering a sleek, responsive frontend styled with a modern, Figma-inspired aesthetic.
 
+**Live Demo:** [https://blog-platform-42z2.onrender.com/](https://blog-platform-42z2.onrender.com/)
+
 ---
 
 ##  Key Features
