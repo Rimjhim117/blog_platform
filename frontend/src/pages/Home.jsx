@@ -46,8 +46,6 @@ const Home = () => {
     }
   };
 
-  if (loading) return <LoadingSpinner />;
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
       {/* Hero Section */}
@@ -129,7 +127,17 @@ const Home = () => {
             </Link>
           </div>
 
-          {error ? (
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-20 bg-white/40 backdrop-blur-md rounded-3xl border border-gray-100/50 shadow-sm max-w-2xl mx-auto px-6">
+              <LoadingSpinner size="lg" />
+              <p className="text-gray-600 font-medium text-lg mt-4 animate-pulse text-center">
+                Waking up the server...
+              </p>
+              <p className="text-gray-400 text-sm mt-2 text-center max-w-md">
+                We're hosting on a free tier, so the first load can take up to 50 seconds. Thanks for your patience!
+              </p>
+            </div>
+          ) : error ? (
             <div className="text-center py-12">
               <div className="bg-white rounded-3xl shadow-sm p-8 max-w-md mx-auto border border-gray-100">
                 <p className="text-gray-500 mb-6">{error}</p>
@@ -149,7 +157,7 @@ const Home = () => {
                 ))}
               </div>
 
-              {featuredPosts.length === 0 && !loading && (
+              {featuredPosts.length === 0 && (
                 <div className="text-center py-16">
                   <div className="bg-white rounded-3xl shadow-sm p-12 max-w-lg mx-auto border border-gray-100">
                     <h3 className="text-2xl font-bold text-gray-900 mb-4">No stories available</h3>

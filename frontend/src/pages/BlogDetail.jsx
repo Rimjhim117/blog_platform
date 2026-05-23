@@ -106,8 +106,16 @@ const BlogDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 flex items-center justify-center pt-20">
-        <LoadingSpinner />
+      <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 flex flex-col items-center justify-center pt-20 px-6">
+        <div className="flex flex-col items-center justify-center py-20 bg-white/40 backdrop-blur-md rounded-3xl border border-gray-100/50 shadow-sm max-w-2xl mx-auto px-6 w-full">
+          <LoadingSpinner size="lg" />
+          <p className="text-gray-600 font-medium text-lg mt-4 animate-pulse text-center">
+            Waking up the server...
+          </p>
+          <p className="text-gray-400 text-sm mt-2 text-center max-w-md">
+            We're hosting on a free tier, so the first load can take up to 50 seconds. Thanks for your patience!
+          </p>
+        </div>
       </div>
     );
   }
