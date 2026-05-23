@@ -1,8 +1,13 @@
-#  Blog Platform – Full-Stack MERN Application
+# ✍️ Blog Platform – Full-Stack MERN Application
 
-A modern full-stack blog platform built using the **MERN** stack (MongoDB, Express, React, Node.js). It supports user authentication and CRUD functionality for posts, delivering a sleek, responsive frontend styled with a modern, Figma-inspired aesthetic.
+**Live Demo:** [blog-platform-42z2.onrender.com](https://blog-platform-42z2.onrender.com/)
 
-**Live Demo:** [https://blog-platform-42z2.onrender.com/](https://blog-platform-42z2.onrender.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Express.js](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)](https://expressjs.com/)
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
+
+> A modern full-stack blog platform built using the **MERN** stack (MongoDB, Express, React, Node.js). It supports user authentication and CRUD functionality for posts, delivering a sleek, responsive frontend styled with a modern, Figma-inspired aesthetic.
 
 ---
 
