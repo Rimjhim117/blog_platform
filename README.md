@@ -31,7 +31,7 @@
 - Token-Based Security  
   Secure access and authorization flow with **jsonwebtoken**.
 
-- ** Modern UI (React)
+-  Modern UI (React)
   Responsive interface styled using **Tailwind CSS**, complete with reusable components and **React Icons**.
 
 -  Draft Auto-save 
@@ -94,10 +94,10 @@ JWT_SECRET=your_secret_key
 
 ## Future Enhancements
 
-- ** Image Upload Support**  
+-  Image Upload Support
   Allow users to upload images for their blog posts using services like Cloudinary.
 
-- ** Rich Text Editor**  
+-  Rich Text Editor
   Enhance the blog writing experience with a full-featured editor.
 
 ---
